@@ -16,8 +16,8 @@ namespace Asteroids
         {
             var form = new Form()
             {
-                MinimumSize = new System.Drawing.Size(800, 600),
-                MaximumSize = new System.Drawing.Size(800, 600),
+                MinimumSize = new System.Drawing.Size(800, 500),
+                MaximumSize = new System.Drawing.Size(800, 500),
                 MaximizeBox = false,
                 MinimizeBox = false,
                 StartPosition = FormStartPosition.CenterScreen,

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Asteroids.Properties;
 
 namespace Asteroids
 {
@@ -14,6 +15,7 @@ namespace Asteroids
         public static BufferedGraphics Buffer;
         static Asteroid[] _asteroids;
         static Asteroid[] _stars;
+        static Asteroid[] _comets;
 
         public static int Width { get; set; }
         public static int Height { get; set; }
@@ -25,6 +27,7 @@ namespace Asteroids
             Width = form.ClientSize.Width;
             Height = form.ClientSize.Height;
             Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
+
 
             Load();
 
@@ -43,13 +46,18 @@ namespace Asteroids
         public static void Draw()
         {
             Buffer.Graphics.Clear(Color.Black);
-            Buffer.Graphics.FillEllipse(Brushes.Red, new Rectangle(100, 100, 200, 200));
+            Buffer.Graphics.DrawImage(Resources.background, new Rectangle(0, 0, 800, 500));           
+            Buffer.Graphics.DrawImage(Resources.planet, new Rectangle(100, 100, 200, 200));
 
             foreach (Asteroid asteroid in _asteroids)
                 asteroid.Draw();
 
             foreach (Asteroid star in _stars)
                 star.Draw();
+
+            foreach (Asteroid comet in _comets)
+                comet.Draw();
+
 
 
             Buffer.Render();
@@ -71,6 +79,12 @@ namespace Asteroids
             {
                 _stars[i] = new Star(new Point(600, i * 40 + 10), new Point(-i - 1, -i - 1), new Size(5, 5));
             }
+
+            _comets = new Asteroid[5];
+            for (int i = 0; i < _comets.Length; i++)
+            {
+                _comets[i] = new Comet(new Point(600, i * 40 + 10), new Point(-i - 1, -i - 1), new Size(30, 30));
+            }
         }
 
         public static void Update()
@@ -80,6 +94,9 @@ namespace Asteroids
 
             foreach (Asteroid star in _stars)
                 star.Update();
+
+            foreach (Asteroid comet in _comets)
+                comet.Update();
         }
 
     }
