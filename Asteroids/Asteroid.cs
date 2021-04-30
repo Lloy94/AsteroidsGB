@@ -13,28 +13,41 @@ namespace Asteroids
         protected Point Pos;
         protected Point Dir;
         protected Size Size;
+        protected static Random random = new Random();
+        protected int index = 0;
 
-       
         public Asteroid(Point pos, Point dir, Size size)
         {
             Pos = pos;
             Dir = dir;
             Size = size;
+            index = random.Next(0, 4);
         }
 
         public virtual void Draw()
         {
-            //Game.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
-           
-                Game.Buffer.Graphics.DrawImage(Resources.meteorBrown_big1, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
-
+            switch (index)
+            {
+                case 0:
+                    Game.Buffer.Graphics.DrawImage(Resources.meteorBrown_big1, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+                case 1:
+                    Game.Buffer.Graphics.DrawImage(Resources.meteorBrown_big2, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+                case 2:
+                    Game.Buffer.Graphics.DrawImage(Resources.meteorBrown_big3, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+                case 3:
+                    Game.Buffer.Graphics.DrawImage(Resources.meteorBrown_big4, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+            }
 
         }
 
         public virtual void Update()
         {
             Pos.X = Pos.X + Dir.X;
-            Pos.Y = Pos.Y ;
+            Pos.Y = Pos.Y;
 
             if (Pos.X < 0) Dir.X = -Dir.X;
             if (Pos.X > Game.Width) Dir.X = -Dir.X;
@@ -42,7 +55,6 @@ namespace Asteroids
             if (Pos.Y < 0) Dir.Y = -Dir.Y;
             if (Pos.Y > Game.Height) Dir.Y = -Dir.Y;
         }
-
 
     }
 }

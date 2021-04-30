@@ -12,14 +12,23 @@ namespace Asteroids
     {
         public Star(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
+            index = random.Next(0, 4);
         }
 
         public override void Draw()
         {
-            //base.Draw();
-            //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);
-            //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width, Pos.Y, Pos.X, Pos.Y + Size.Height);
-            Game.Buffer.Graphics.DrawImage(Resources.star1, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+            switch (index)
+            {
+                case 0:
+                    Game.Buffer.Graphics.DrawImage(Resources.star1, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+                case 1:
+                    Game.Buffer.Graphics.DrawImage(Resources.star2, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+                case 2:
+                    Game.Buffer.Graphics.DrawImage(Resources.star3, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+            }
         }
 
         public override void Update()
