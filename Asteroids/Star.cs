@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Asteroids.Properties;
 
 namespace Asteroids
 {
@@ -11,13 +12,23 @@ namespace Asteroids
     {
         public Star(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
+            index = random.Next(0, 4);
         }
 
         public override void Draw()
         {
-            //base.Draw();
-            Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);
-            Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width, Pos.Y, Pos.X, Pos.Y + Size.Height);
+            switch (index)
+            {
+                case 0:
+                    Game.Buffer.Graphics.DrawImage(Resources.star1, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+                case 1:
+                    Game.Buffer.Graphics.DrawImage(Resources.star2, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+                case 2:
+                    Game.Buffer.Graphics.DrawImage(Resources.star3, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    break;
+            }
         }
 
         public override void Update()
@@ -25,7 +36,7 @@ namespace Asteroids
             //base.Update();
 
             Pos.X = Pos.X + Dir.X;
-            Pos.Y = Pos.Y + Dir.Y;
+            Pos.Y = Pos.Y;
 
             if (Pos.X < 0) Dir.X = -Dir.X;
             if (Pos.X > Game.Width) Dir.X = -Dir.X;
