@@ -8,7 +8,7 @@ using Asteroids.Properties;
 
 namespace Asteroids
 {
-    class Comet : Asteroid
+    class Comet : BaseObject
     {
     public Comet (Point pos, Point dir, Size size) : base(pos, dir, size)
     {
@@ -16,15 +16,11 @@ namespace Asteroids
 
     public override void Draw()
     {
-            //base.Draw();
-            //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);
-            //Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width, Pos.Y, Pos.X, Pos.Y + Size.Height);
             Game.Buffer.Graphics.DrawImage(Resources.comet, new Rectangle(Pos.X, Pos.Y, 30, 30));
         }
 
     public override void Update()
     {
-        //base.Update();
 
         Pos.X = Pos.X + Dir.X;
         Pos.Y = Pos.Y;
