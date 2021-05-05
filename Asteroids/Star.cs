@@ -8,11 +8,11 @@ using Asteroids.Properties;
 
 namespace Asteroids
 {
-    class Star : Asteroid
+    class Star : BaseObject
     {
         public Star(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
-            index = random.Next(0, 4);
+            index = random.Next(0, 2);
         }
 
         public override void Draw()
