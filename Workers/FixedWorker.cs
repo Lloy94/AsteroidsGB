@@ -8,13 +8,16 @@ namespace Workers
 {
     class FixedWorker : Worker
     {
-        public FixedWorker(string secondName, string name, int age) : base(secondName, name, age) { }
+        public FixedWorker(string secondName, string name, int age, decimal salary) : base(secondName, name, age,salary) { }
 
-        protected override double Value(double monthValue)
+        public override decimal СalculateSalary()
         {
-            double fixedMonthValue = monthValue;
-            return fixedMonthValue;
+            return Salary;
+        }
 
+        public override string ToString()
+        {
+            return $"{SecondName} {Name};{Age}; Рабочий; Среднемесячная заработная плата (фиксированная месячная оплата): {СalculateSalary()} (руб.)";
         }
     }
 }

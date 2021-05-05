@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace Workers
 {
-    abstract class Worker : IComparable<Worker>
+   public  abstract class Worker 
     {
-        public string Name { get; set; }
-        public string SecondName { get; set; }
-        public int Age { get; set; }
-
-        public Worker(string secondName, string name, int age)
+        public  string Name { get; set; }
+        public  string SecondName { get; set; }
+        public  int Age { get; set; }
+       
+        public  decimal Salary { get; set; }
+        
+        public  abstract decimal СalculateSalary();
+      
+        public  Worker(string secondName, string name, int age,decimal salary)
         {
             SecondName = secondName;
             Name = name;
             Age = age;
+            Salary = salary;
         }
 
-        public int CompareTo(Worker other)
-        {
-            return Age - other.Age;
-        }
 
-        protected abstract double Value(double value);
     }
 }
