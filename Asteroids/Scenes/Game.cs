@@ -14,22 +14,23 @@ namespace Asteroids
 {
     public class Game : BaseScene
     {
-        private BaseObject[] _asteroids;
+        static List<BaseObject> _asteroids = new List<BaseObject>();
         private BaseObject[] _stars;
-        private Bullet _bullet;
-        private Ship _ship;
+        static List<Bullet> _bullets = new List<Bullet>();
+        private static Ship _ship = new Ship(new Point(10, 400), new Point(5, 5), new Size(45, 50));
         private Timer _timer;
         private Random random = new Random();
         private Comet _comet;
         private EnergyCore _energyCore;
         private int Score;
         Journal.Journaladd journal;
+        private static int AsteroidsCount;
 
         public override void Init(Form form)
         {
             base.Init(form);
 
-            Load(); 
+            Load();
 
             _timer = new Timer { Interval = 60 };
             _timer.Start();
@@ -41,7 +42,7 @@ namespace Asteroids
         {
             if (e.KeyCode == Keys.ControlKey)
             {
-                _bullet = new Bullet(new Point(_ship.Rect.X + 10, _ship.Rect.Y + 21), new Point(5, 0), new Size(54, 9));
+                _bullets.Add(new Bullet(new Point(_ship.Rect.X + 10, _ship.Rect.Y + 21), new Point(5, 0), new Size(54, 9)));
                 journal = Journal.ObjectCreation;
                 journal();
             }
@@ -78,28 +79,28 @@ namespace Asteroids
             Buffer.Graphics.DrawImage(Resources.background, new Rectangle(0, 0, 800, 500));
             Buffer.Graphics.DrawImage(new Bitmap(Resources.planet, new Size(200, 200)), 100, 100);
 
-            foreach (var obj in _stars)           
+            foreach (var obj in _stars)
                 obj.Draw();
 
 
             foreach (var asteroid in _asteroids)
-                if (asteroid != null)
-                    asteroid.Draw();
+                asteroid.Draw();
+
+            foreach (var boolet in _bullets)
+                boolet.Draw();
 
             _comet.Draw();
             journal = Journal.ObjectCreation;
             journal();
 
-            if (_bullet != null)
-                _bullet.Draw();
 
-            if (_energyCore== null && _ship.Energy <= 50)
+            if (_energyCore == null && _ship.Energy <= 50)
             {
                 _energyCore = new EnergyCore(new Point(22, corePosition), new Point(0, 4), new Size(44, 44));
                 journal = Journal.ObjectCreation;
-                journal();    
+                journal();
             }
-            if(_energyCore!= null)
+            if (_energyCore != null)
                 _energyCore.Draw();
 
 
@@ -116,28 +117,24 @@ namespace Asteroids
 
         public void Load()
         {
-            _ship = new Ship(new Point(10, 400), new Point(5, 5), new Size(45, 50));
-            journal = Journal.ObjectCreation;
-            journal();
-            Ship.DieEvent += Finish;
+            AsteroidsCount = 15;
 
             var random = new Random();
-            _asteroids = new Asteroid[15];
-            for (int i = 0; i < _asteroids.Length; i++)
+            for (int i = 0; i < AsteroidsCount; i++)
             {
                 var size = random.Next(10, 40);
-                _asteroids[i] = new Asteroid(new Point(600, i * 20+10), new Point(-i-1, -i-1), new Size(size, size));
-                journal = Journal.ObjectCreation;
-                journal();
+                var pos = random.Next(50, 450);
+                var speed = random.Next(3, 10);
+                _asteroids.Add(new Asteroid(new Point(600, pos), new Point(-speed, -speed), new Size(size, size)));
             }
             _stars = new Star[20];
             for (int i = 0; i < _stars.Length; i++)
             {
-                _stars[i] = new Star(new Point(600, i * 40 + 10), new Point(-i -1, -i -1), new Size(3, 3));
+                _stars[i] = new Star(new Point(600, i * 40 + 10), new Point(-i - 1, -i - 1), new Size(3, 3));
                 journal = Journal.ObjectCreation;
                 journal();
             }
-            var cometPositon = random.Next(100, 401);      
+            var cometPositon = random.Next(100, 401);
             _comet = new Comet(new Point(cometPositon, cometPositon), new Point(5, 0), new Size(30, 30));
             journal = Journal.ObjectCreation;
             journal();
@@ -146,33 +143,46 @@ namespace Asteroids
         public void Update()
         {
 
-            for (int i = 0; i < _asteroids.Length; i++)
+            // Пройдемся по всем астероидам (с конца в начало)
+            for (int i = _asteroids.Count - 1; i >= 0; i--)
             {
-                if (_asteroids[i] == null) continue;
-
-                _asteroids[i].Update();
-                if (_bullet != null && _bullet.Collision(_asteroids[i]))
-                {                  
-                    Score += _asteroids[i].Rect.Width;
-                    _asteroids[i] = null;
-                    _bullet = null;
-                    journal = Journal.ObjectCollision;                    
-                    journal();
-                    continue;
-                }
-
-                if (_ship != null && _ship.Collision(_asteroids[i]))
+                // Проверим столкновение с кораблем
+                if (_asteroids[i].Collision(_ship))
                 {
+                    System.Media.SystemSounds.Asterisk.Play();
                     _ship.EnergyLow(random.Next(1, 10));
-                    System.Media.SystemSounds.Hand.Play();
-
-                    journal = Journal.ObjectCollision;
-                    journal();
-
+                    Score += random.Next(_asteroids[i].Rect.Width, _asteroids[i].Rect.Height);
+                    _asteroids.RemoveAt(i);
                     if (_ship.Energy <= 0)
                         _ship.Die();
                 }
+                else // Проверим столкновение с пулей
+                {
+                    // Пройдемся по всем снарядам (с конца в начало)
+                    for (int j = _bullets.Count - 1; j >= 0; j--)
+                    {
+                        if (_asteroids[i].Collision(_bullets[j]))
+                        {
+                            System.Media.SystemSounds.Hand.Play();
+                            Score += random.Next(_asteroids[i].Rect.Width, _asteroids[i].Rect.Height);
+                            _asteroids.RemoveAt(i);
+                            _bullets.RemoveAt(j);
+                            break;
+                        }
+                    }
+                }
+            }
 
+            if (_asteroids.Count == 0)
+            {
+                AsteroidsCount++;
+                for (int i = 0; i < AsteroidsCount; i++)
+                {
+                    var size = random.Next(10, 40);
+                    var pos = random.Next(50, 450);
+                    var speed = random.Next(3, 10);
+                    _asteroids.Add(new Asteroid(new Point(600, pos), new Point(-speed, -speed), new Size(size, size)));
+                }
             }
 
             if (_energyCore != null && _ship != null && _ship.Collision(_energyCore))
@@ -185,25 +195,32 @@ namespace Asteroids
 
             _comet.Update();
 
-            if (_bullet != null && _bullet.Collision(_comet))
+            for (int k = _bullets.Count - 1; k >= 0; k--)
             {
-                journal = Journal.ObjectCollision;
-                journal();
-                _bullet = null;
+                if (_comet.Collision(_bullets[k]))
+                {
+                    System.Media.SystemSounds.Hand.Play();
+                    _bullets.RemoveAt(k);
+                    break;
+                }
             }
 
             if (_ship != null && _ship.Collision(_comet))
-                               _ship.Die();
-            
+                _ship.Die();
 
-            foreach (var obj in _stars)
-                obj.Update();
+
 
             if (_energyCore != null)
                 _energyCore.Update();
 
-            if (_bullet != null)
-                _bullet.Update();
+            foreach (var obj in _stars)
+                obj.Update();
+
+            foreach (var asteroid in _asteroids)
+                asteroid.Update();
+
+            foreach (var boolet in _bullets)
+                boolet.Update();
         }
 
         private void Finish(object sender, EventArgs e)
