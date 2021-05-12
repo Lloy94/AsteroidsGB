@@ -14,7 +14,6 @@ namespace Asteroids
         [STAThread]
         static void Main()
         {
-            File.Create(AppDomain.CurrentDomain.BaseDirectory + "Journal.txt");
             var form = new Form()
             {
                 MinimumSize = new System.Drawing.Size(800, 500),
