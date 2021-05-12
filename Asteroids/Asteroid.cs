@@ -10,29 +10,32 @@ namespace Asteroids
 {
     class Asteroid : BaseObject
     {
+        private int index;
+        Random r = new Random();
+        public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size)
+        {
 
-        public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size) { }
-
+            index = r.Next(1, 5);
+        }
 
         public override void Draw()
         {
             switch (index)
             {
                 case 1:
-                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.meteorBrown_big1, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
+                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.asteroid01, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
                     break;
                 case 2:
-                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.meteorBrown_big2, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
+                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.asteroid02, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
                     break;
                 case 3:
-                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.meteorBrown_big3, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
+                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.asteroid03, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
                     break;
                 case 4:
-                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.meteorBrown_big4, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
+                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.asteroid04, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
                     break;
             }
         }
-
         public override void Update()
         {
             Pos.X = Pos.X + Dir.X;
@@ -43,10 +46,5 @@ namespace Asteroids
             if (Pos.Y > Game.Height) Dir.Y = -Dir.Y;
         }
 
-        public override void CollisionUpdate()
-        {
-            Pos.X = 750;
-            Pos.Y = Pos.Y + Dir.Y;            
-        }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Asteroids.Scenes;
 
 namespace Asteroids
 {
+
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
@@ -23,11 +23,14 @@ namespace Asteroids
                 StartPosition = FormStartPosition.CenterScreen,
                 Text = "Asteroids"
             };
-
-            Game.Init(form);
             form.Show();
-            Game.Draw();
+
+            SceneManager
+                .Get()
+                .Init<MenuScene>(form)
+                .Draw();
+
             Application.Run(form);
         }
-    }
+    }  
 }

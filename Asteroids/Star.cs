@@ -10,9 +10,11 @@ namespace Asteroids
 {
     class Star : BaseObject
     {
+        private int index;
+        Random r = new Random();
         public Star(Point pos, Point dir, Size size) : base(pos, dir, size)
         {
-            index = random.Next(0, 2);
+            index = r.Next(0, 3);
         }
 
         public override void Draw()
@@ -20,13 +22,13 @@ namespace Asteroids
             switch (index)
             {
                 case 0:
-                    Game.Buffer.Graphics.DrawImage(Resources.star1, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.star1, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
                     break;
                 case 1:
-                    Game.Buffer.Graphics.DrawImage(Resources.star2, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.star2, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
                     break;
                 case 2:
-                    Game.Buffer.Graphics.DrawImage(Resources.star3, new Rectangle(Pos.X, Pos.Y, Size.Width, Size.Height));
+                    Game.Buffer.Graphics.DrawImage(new Bitmap(Resources.star3, new Size(Size.Width, Size.Height)), Pos.X, Pos.Y);
                     break;
             }
         }
